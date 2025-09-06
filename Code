@@ -1,0 +1,62 @@
+#include <AFMotor.h>  // If you use Adafruit Motor Shield, otherwise use L298N pin setup
+
+// Motor Pins (for L298N)
+const int motor1Pin1 = 5;
+const int motor1Pin2 = 6;
+const int motor2Pin1 = 9;
+const int motor2Pin2 = 10;
+
+// Bluetooth serial (HC-05)
+char command;
+
+void setup() {
+  Serial.begin(9600);  // Bluetooth module connected to Arduino's Serial
+  pinMode(motor1Pin1, OUTPUT);
+  pinMode(motor1Pin2, OUTPUT);
+  pinMode(motor2Pin1, OUTPUT);
+  pinMode(motor2Pin2, OUTPUT);
+}
+
+void loop() {
+  if (Serial.available()) {
+    command = Serial.read(); // Read Bluetooth command
+    controlMotor(command);
+  }
+}
+
+void controlMotor(char cmd) {
+  switch(cmd) {
+    case 'F': // Forward
+      digitalWrite(motor1Pin1, HIGH);
+      digitalWrite(motor1Pin2, LOW);
+      digitalWrite(motor2Pin1, HIGH);
+      digitalWrite(motor2Pin2, LOW);
+      break;
+    case 'B': // Backward
+      digitalWrite(motor1Pin1, LOW);
+      digitalWrite(motor1Pin2, HIGH);
+      digitalWrite(motor2Pin1, LOW);
+      digitalWrite(motor2Pin2, HIGH);
+      break;
+    case 'L': // Left
+      digitalWrite(motor1Pin1, LOW);
+      digitalWrite(motor1Pin2, HIGH);
+      digitalWrite(motor2Pin1, HIGH);
+      digitalWrite(motor2Pin2, LOW);
+      break;
+    case 'R': // Right
+      digitalWrite(motor1Pin1, HIGH);
+      digitalWrite(motor1Pin2, LOW);
+      digitalWrite(motor2Pin1, LOW);
+      digitalWrite(motor2Pin2, HIGH);
+      break;
+    case 'S': // Stop
+      digitalWrite(motor1Pin1, LOW);
+      digitalWrite(motor1Pin2, LOW);
+      digitalWrite(motor2Pin1, LOW);
+      digitalWrite(motor2Pin2, LOW);
+      break;
+    default:
+      break;
+  }
+}
